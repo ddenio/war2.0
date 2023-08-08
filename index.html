@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="description" content="This is where your description goes">
+	<meta name="keywords" content="one, two, three">
+
+	<title>War!!</title>
+
+	<!-- external CSS link -->
+	<link rel="stylesheet" href="css/normalize.css">
+	<link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+	<h1>Welcome to the Game of War!</h1>
+	<div id="grabdeck">
+		<h2>1. Grab a deck by clicking this button</h2>
+		<button type="button" name="button" id="shuffle" onClick="hideDiv()">Get Deck</button>
+	</div>
+
+	<div id="deckdiv">
+		<img src="" alt="" id="deck">
+		<h3 id="remaining"></h3>
+	</div>
+
+	<div id="drawcard">
+		<h2>2. Draw a card</h2>
+		<button type="button" name="button" id="draw">Draw</button>
+	</div>
+	<div id="reset">
+		<h2>Click to Reset</h2>
+		<button type="button" name="button" id="resetbutton" >Reset</button>
+	</div>
+
+
+	
+
+	<div id="container">
+		<div id="compscore">
+			<h2 id="compcounter">Computer Score:</h2>
+			<img src="" alt="" id="compPile">
+		</div>
+
+		<div id="div1">
+			<h2 id="compCardText"></h2>
+			<img src="" alt="" id="compCard">
+		</div>
+
+		<div id="div2">
+			<h2 id="playerCardText"></h2>
+			<img src="" alt="" id="playerCard">
+		</div>
+		<div id="playerscore">
+			<h2 id="playercounter">Player Score:</h2>
+			<img src="" alt="" id="playerPile">
+		</div>
+	</div>
+
+
+
+
+	<script type="text/javascript" src="js/main.js"></script>
+</body>
+
+</html>
