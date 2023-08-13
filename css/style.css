@@ -138,6 +138,8 @@ button {
 #resetbutton {
   padding: 8px;
   background-color: red;
+  font-size:20px;
+  font-weight: bolder;
 }
 
 

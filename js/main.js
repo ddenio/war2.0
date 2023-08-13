@@ -48,6 +48,10 @@ function reset() {
   let reset = document.getElementById('reset');
   document.getElementById('compCardText').innerText = '';
   document.getElementById('playerCardText').innerText = '';
+  let player = document.getElementById('playercounter');
+  let computer = document.getElementById('compcounter');
+  computer.style.color = "white";
+  player.style.color = "white";
   compScore = 0;
   playerScore = 0;
   if (reset.style.display === "none") {
@@ -84,11 +88,14 @@ function getDraw() {
   let computer = document.getElementById('compcounter');
   let playertext = document.getElementById('playerCardText').innerText = 'Player Card';
   let comptext = document.getElementById('compCardText').innerText = 'Computer Card';
+  
   fetch(url)
     .then(res => res.json()) // parse response as JSON
     .then(data => {
       console.log(data)
       z.style.display = "flex";
+      let computerVal = convertToNum(data.cards[0].value);
+      let player1Val = convertToNum(data.cards[1].value);
       if (data.remaining === 0) {
         document.querySelector('#compCard').src = data.cards[0].image
         comptext;
@@ -97,7 +104,7 @@ function getDraw() {
         document.querySelector('#remaining').innerText = `Cards remaining: ${data.remaining}`
         document.querySelector('#compPile').src = 'https://www.deckofcardsapi.com/static/img/back.png';
         document.querySelector('#playerPile').src = 'https://www.deckofcardsapi.com/static/img/back.png';
-        if (data.cards[0].value > data.cards[1].value) {
+        if (computerVal > player1Val) {
           compScore += 2;
           computer.style.color = "yellow";
           player.style.color = "white";
@@ -121,7 +128,8 @@ function getDraw() {
           document.getElementById('playerCardText').innerText = '';
           document.querySelector('#compCard').src = ""
           document.querySelector('#playerCard').src = ""
-
+          computer.style.color = "green";
+          player.style.color = "white";
           if (reset.style.display === "flex") {
             reset.style.display = "none";
           } else {
@@ -137,18 +145,20 @@ function getDraw() {
           document.querySelector('#remaining').innerText = `Cards remaining: 0`
           document.querySelector('#compCard').src = ""
           document.querySelector('#playerCard').src = ""
-
+          computer.style.color = "white";
+          player.style.color = "green";
           if (reset.style.display === "flex") {
             reset.style.display = "none";
           } else {
             reset.style.display = "flex";
           }
-          setTimeout(function () { alert(`You win with ${playerScoreScore} points !`); }, 1000);
+          setTimeout(function () { alert(`You win with ${playerScore} points !`); }, 1000);
 
         }
 
       }
       else {
+        
         document.querySelector('#compCard').src = data.cards[0].image
         document.querySelector('#playerCard').src = data.cards[1].image
         document.querySelector('#remaining').innerText = `Cards remaining: ${data.remaining}`
@@ -156,7 +166,7 @@ function getDraw() {
         document.querySelector('#playerPile').src = 'https://www.deckofcardsapi.com/static/img/back.png';
         comptext;
         playertext;
-        if (data.cards[0].value > data.cards[1].value) {
+        if (computerVal > player1Val) {
           compScore += 2;
           computer.style.color = "yellow";
           player.style.color = "white";
@@ -179,5 +189,17 @@ function getDraw() {
     });
 }
 
-
+function convertToNum(val){
+  if (val === 'ACE') {
+    return 14
+  }else if (val === 'KING'){
+    return 13
+  }else if (val === 'QUEEN'){
+    return 12
+  }else if (val === 'JACK'){
+    return 11
+  }else {
+    return Number(val)
+  }
+}
 
