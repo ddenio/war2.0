@@ -1,6 +1,6 @@
 //Example fetch using pokemonapi.co
 document.querySelector('#shuffle').addEventListener('click', getFetch)
-
+document.querySelector('#warDraw').addEventListener('click', warDraw)
 document.querySelector('#draw').addEventListener('click', getDraw)
 document.querySelector('#resetbutton').addEventListener('click', reset)
 
@@ -44,6 +44,21 @@ function hideDiv() {
 
 }
 
+function showWarDiv() {
+  let warHeader = document.getElementById('warHeader');
+  let warDiv = document.getElementById('warDrawDiv');
+  if (warHeader.style.display === "flex") {
+    warHeader.style.display = "none";
+  } else {
+    warHeader.style.display = "flex";
+  }
+  if (warDiv.style.display === "flex") {
+    warDiv.style.display = "none";
+  } else {
+    warDiv.style.display = "flex";
+  }
+}
+
 function reset() {
   let reset = document.getElementById('reset');
   document.getElementById('compCardText').innerText = '';
@@ -82,6 +97,7 @@ let playerScore = 0;
 
 function getDraw() {
   const url = `https://www.deckofcardsapi.com/api/deck/${deckId}/draw/?count=2`;
+  document.querySelector('#warHeader').innerText = "";
   let reset = document.getElementById('reset');
   let z = document.getElementById('container');
   let player = document.getElementById('playercounter');
@@ -96,6 +112,7 @@ function getDraw() {
       z.style.display = "flex";
       let computerVal = convertToNum(data.cards[0].value);
       let player1Val = convertToNum(data.cards[1].value);
+      console.log(`Computer Val: ${computerVal}, Player Val: ${player1Val}`)
       if (data.remaining === 0) {
         document.querySelector('#compCard').src = data.cards[0].image
         comptext;
@@ -104,7 +121,15 @@ function getDraw() {
         document.querySelector('#remaining').innerText = `Cards remaining: ${data.remaining}`
         document.querySelector('#compPile').src = 'https://www.deckofcardsapi.com/static/img/back.png';
         document.querySelector('#playerPile').src = 'https://www.deckofcardsapi.com/static/img/back.png';
-        if (computerVal > player1Val) {
+        if (computerVal === player1Val) {
+          computer.style.color = "white";
+          player.style.color = "white";
+          document.querySelector('#warHeader').innerText = `War!!! Draw another card to see who wins!!`
+          document.querySelector('#compcounter').innerText = `Computer Score: ${compScore}`;
+          document.querySelector('#playercounter').innerText = `Player Score: ${playerScore}`;
+          showWarDiv();
+          drawHide();
+        } else if(computerVal > player1Val) {
           compScore += 2;
           computer.style.color = "yellow";
           player.style.color = "white";
@@ -119,7 +144,7 @@ function getDraw() {
           document.querySelector('#compcounter').innerText = `Computer Score: ${compScore}`;
           document.querySelector('#playercounter').innerText = `Player Score: ${playerScore}`;
 
-        }
+        } 
         if (compScore > playerScore) {
 
           document.querySelector('#compcounter').innerText = `Computer Score: ${compScore}`;
@@ -135,7 +160,9 @@ function getDraw() {
           } else {
             reset.style.display = "flex";
           }
-          setTimeout(function () { alert(`Computer Wins with ${compScore} points :/`); }, 1000);
+          playertext = document.getElementById('playerCardText').innerText = '';
+          comptext = document.getElementById('compCardText').innerText = '';
+          setTimeout(function () { alert(`Computer Wins with ${compScore} points :/`); }, 500);
 
 
         } else {
@@ -152,7 +179,9 @@ function getDraw() {
           } else {
             reset.style.display = "flex";
           }
-          setTimeout(function () { alert(`You win with ${playerScore} points !`); }, 1000);
+          playertext = document.getElementById('playerCardText').innerText = '';
+          comptext = document.getElementById('compCardText').innerText = '';
+          setTimeout(function () { alert(`You win with ${playerScore} points !`); }, 500);
 
         }
 
@@ -166,19 +195,166 @@ function getDraw() {
         document.querySelector('#playerPile').src = 'https://www.deckofcardsapi.com/static/img/back.png';
         comptext;
         playertext;
-        if (computerVal > player1Val) {
+        if (computerVal === player1Val) {
+          computer.style.color = "white";
+          player.style.color = "white";
+          showWarDiv();
+          document.querySelector('#warHeader').innerText = `War!!! Draw another card to see who wins!!`
+          document.querySelector('#compcounter').innerText = `Computer Score: ${compScore}`;
+          document.querySelector('#playercounter').innerText = `Player Score: ${playerScore}`;
+          drawHide();
+        } else if(computerVal > player1Val) {
           compScore += 2;
           computer.style.color = "yellow";
           player.style.color = "white";
+
           document.querySelector('#compcounter').innerText = `Computer Score: ${compScore}`;
           document.querySelector('#playercounter').innerText = `Player Score: ${playerScore}`;
+
         } else {
           playerScore += 2;
           computer.style.color = "white";
           player.style.color = "yellow";
           document.querySelector('#compcounter').innerText = `Computer Score: ${compScore}`;
           document.querySelector('#playercounter').innerText = `Player Score: ${playerScore}`;
+
+        } 
+      }
+
+
+
+    })
+    .catch(err => {
+      console.log(`error ${err}`)
+    });
+}
+
+function warDraw() {
+  const url = `https://www.deckofcardsapi.com/api/deck/${deckId}/draw/?count=4`;
+  let reset = document.getElementById('reset');
+  let z = document.getElementById('container');
+  let player = document.getElementById('playercounter');
+  let computer = document.getElementById('compcounter');
+  let playertext = document.getElementById('playerCardText').innerText = 'Player Card';
+  let comptext = document.getElementById('compCardText').innerText = 'Computer Card';
+  
+  fetch(url)
+    .then(res => res.json()) // parse response as JSON
+    .then(data => {
+      console.log(data)
+      z.style.display = "flex";
+      let computerVal = convertToNum(data.cards[0].value);
+      let player1Val = convertToNum(data.cards[1].value);
+      console.log(`Computer Val: ${computerVal}, Player Val: ${player1Val}`)
+      if (data.remaining === 0) {
+        document.querySelector('#compCard').src = data.cards[0].image
+        comptext;
+        playertext;
+        document.querySelector('#playerCard').src = data.cards[1].image
+        document.querySelector('#remaining').innerText = `Cards remaining: ${data.remaining}`
+        document.querySelector('#compPile').src = 'https://www.deckofcardsapi.com/static/img/back.png';
+        document.querySelector('#playerPile').src = 'https://www.deckofcardsapi.com/static/img/back.png';
+        if (computerVal === player1Val) {
+          computer.style.color = "white";
+          player.style.color = "white";
+          document.querySelector('#warHeader').innerText = `War!!! Draw another card to see who wins!!`
+          document.querySelector('#compcounter').innerText = `Computer Score: ${compScore}`;
+          document.querySelector('#playercounter').innerText = `Player Score: ${playerScore}`;
+          showWarDiv();
+          drawHide();
+        } else if(computerVal > player1Val) {
+          compScore += 6;
+          computer.style.color = "yellow";
+          player.style.color = "white";
+          document.querySelector('#compcounter').innerText = `Computer Score: ${compScore}`;
+          document.querySelector('#playercounter').innerText = `Player Score: ${playerScore}`;
+          drawHide();
+          showWarDiv();
+        } else {
+          playerScore += 6;
+          computer.style.color = "white";
+          player.style.color = "yellow";
+          document.querySelector('#compcounter').innerText = `Computer Score: ${compScore}`;
+          document.querySelector('#playercounter').innerText = `Player Score: ${playerScore}`;
+          drawHide();
+          showWarDiv();
+        } 
+        if (compScore > playerScore) {
+
+          document.querySelector('#compcounter').innerText = `Computer Score: ${compScore}`;
+          document.querySelector('#remaining').innerText = `Cards remaining: 0`
+          document.getElementById('compCardText').innerText = '';
+          document.getElementById('playerCardText').innerText = '';
+          document.querySelector('#compCard').src = ""
+          document.querySelector('#playerCard').src = ""
+          computer.style.color = "green";
+          player.style.color = "white";
+          if (reset.style.display === "flex") {
+            reset.style.display = "none";
+          } else {
+            reset.style.display = "flex";
+          }
+          setTimeout(function () { alert(`Computer Wins with ${compScore} points :/`); }, 500);
+
+
+        } else {
+          document.getElementById('compCardText').innerText = '';
+          document.getElementById('playerCardText').innerText = '';
+          document.querySelector('#playercounter').innerText = `Player Score: ${playerScore}`;
+          document.querySelector('#remaining').innerText = `Cards remaining: 0`
+          document.querySelector('#compCard').src = ""
+          document.querySelector('#playerCard').src = ""
+          computer.style.color = "white";
+          player.style.color = "green";
+          if (reset.style.display === "flex") {
+            reset.style.display = "none";
+          } else {
+            reset.style.display = "flex";
+          }
+          setTimeout(function () { alert(`You win with ${playerScore} points !`); }, 500);
+
         }
+
+      }
+      else {
+        
+        document.querySelector('#compCard').src = data.cards[0].image
+        document.querySelector('#playerCard').src = data.cards[1].image
+        document.querySelector('#remaining').innerText = `Cards remaining: ${data.remaining}`
+        document.querySelector('#compPile').src = 'https://www.deckofcardsapi.com/static/img/back.png';
+        document.querySelector('#playerPile').src = 'https://www.deckofcardsapi.com/static/img/back.png';
+        comptext;
+        playertext;
+        if (computerVal === player1Val) {
+          computer.style.color = "white";
+          player.style.color = "white";
+          showWarDiv();
+          document.querySelector('#warHeader').innerText = `War!!! Draw another card to see who wins!!`
+          document.querySelector('#compcounter').innerText = `Computer Score: ${compScore}`;
+          document.querySelector('#playercounter').innerText = `Player Score: ${playerScore}`;
+          drawHide();
+        } else if(computerVal > player1Val) {
+          compScore += 6;
+          computer.style.color = "yellow";
+          player.style.color = "white";
+          document.querySelector('#compcounter').innerText = `Computer Score: ${compScore}`;
+          document.querySelector('#playercounter').innerText = `Player Score: ${playerScore}`;
+          document.querySelector('#compcounter').innerText = `Computer Score: ${compScore}`;
+          document.querySelector('#warHeader').innerText = `Computer Wins War and 6 Cards!`
+          warHeaderHide();
+          drawHide();
+          showWarDiv();
+        } else {
+          playerScore += 6;
+          computer.style.color = "white";
+          player.style.color = "yellow";
+          document.querySelector('#compcounter').innerText = `Computer Score: ${compScore}`;
+          document.querySelector('#playercounter').innerText = `Player Score: ${playerScore}`;
+          document.querySelector('#warHeader').innerText = `Player Wins War and 6 Cards!`
+          warHeaderHide();
+          drawHide();
+          showWarDiv();
+        } 
       }
 
 
@@ -203,3 +379,20 @@ function convertToNum(val){
   }
 }
 
+function drawHide() {
+  let y = document.getElementById('drawcard');
+  if (y.style.display === "none") {
+    y.style.display = "flex";
+  } else {
+    y.style.display = "none";
+  }
+}
+
+function warHeaderHide() {
+  let y = document.getElementById('warHeader');
+  if (y.style.display === "none") {
+    y.style.display = "flex";
+  } else {
+    y.style.display = "none";
+  }
+}
