@@ -2,6 +2,7 @@
 document.querySelector('#shuffle').addEventListener('click', getFetch)
 document.querySelector('#warDraw').addEventListener('click', warDraw)
 document.querySelector('#draw').addEventListener('click', getDraw)
+document.querySelector('#deck').addEventListener('click', getDraw)
 document.querySelector('#resetbutton').addEventListener('click', reset)
 
 function hideDiv() {
@@ -97,7 +98,11 @@ let playerScore = 0;
 
 function getDraw() {
   const url = `https://www.deckofcardsapi.com/api/deck/${deckId}/draw/?count=2`;
-  document.querySelector('#warHeader').innerText = "";
+  let y = document.getElementById('warHeader');
+  if (y.style.display === "flex") {
+    y.style.display = "none";
+  }
+  
   let reset = document.getElementById('reset');
   let z = document.getElementById('container');
   let player = document.getElementById('playercounter');
@@ -230,6 +235,7 @@ function getDraw() {
 }
 
 function warDraw() {
+  
   const url = `https://www.deckofcardsapi.com/api/deck/${deckId}/draw/?count=4`;
   let reset = document.getElementById('reset');
   let z = document.getElementById('container');
@@ -340,7 +346,7 @@ function warDraw() {
           document.querySelector('#compcounter').innerText = `Computer Score: ${compScore}`;
           document.querySelector('#playercounter').innerText = `Player Score: ${playerScore}`;
           document.querySelector('#compcounter').innerText = `Computer Score: ${compScore}`;
-          document.querySelector('#warHeader').innerText = `Computer Wins War and 6 Cards!`
+          document.querySelector('#warHeader').innerText = `Computer Wins War and 6 Cards!`;
           warHeaderHide();
           drawHide();
           showWarDiv();
@@ -363,6 +369,7 @@ function warDraw() {
     .catch(err => {
       console.log(`error ${err}`)
     });
+    
 }
 
 function convertToNum(val){
